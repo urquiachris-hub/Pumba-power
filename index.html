@@ -278,19 +278,19 @@ nav button[aria-current="page"]{color:var(--plum);background:var(--soft);font-we
 <script>
 const KEY='mission-laura-v1';
 const LOVE=[
-  'Bonjour ma beauté ☀️ Chaque séance est un pas de plus, et je suis déjà fier de toi.',
+  'Bonjour ma beauté ☀️ Chaque séance est un pas de plus, tu peux être fière de toi.',
   'Pumba, on va y arriver ensemble. Toi et moi, une séance après l’autre.',
   'Tu es belle. Aujourd’hui, demain, et tous les jours entre les deux.',
   'Ma beauté, n’oublie pas que je te trouve déjà magnifique exactement comme tu es.',
   'Une planche de plus = un câlin de plus. Je tiens les comptes 😘',
   'Hakuna Matata, Pumba ! Pas de pression, juste toi et ton souffle.',
-  'Si tu es en mammouth aujourd’hui, je ne dis rien… mais je suis fier de toi quand même 🦣',
+  'Si tu es en mammouth aujourd’hui, je ne dis rien… mais tu peux être fière de toi quand même 🦣',
   'En mode cochon ? Parfait, c’est ton super-pouvoir du quotidien, ma beauté 🐷',
   'Pense à moi pendant ton gainage… et souris, ça aide à tenir 😉',
   'Tu es plus forte que tu ne le crois, ma beauté.',
   'On avance ensemble, Pumba. Je suis ton premier supporter.',
   'Tu es belle, et tu ne le sais pas assez. Alors je te le redis.',
-  'Chaque petit effort compte, et chacun me rend encore plus fier de toi.',
+  'Chaque petit effort compte, et chacun mérite que tu sois fière de toi.',
   'Ce soir, raconte-moi ta séance. Je veux tout savoir, ma beauté.',
   'Douceur plaisir autorisée aujourd’hui : c’est moi qui l’ai décidé 🍫',
   'Pumba, tu n’es pas seule dans cette mission. On y va ensemble, main dans la main.'
@@ -394,7 +394,7 @@ function renderSession(){
   const box=document.getElementById('sessionBox');
   const done=S.log.find(l=>l.d===today());
   if(done){
-    const m={chick:'Mon poussin ! Séance et bonus validés, tu es incroyable. Je suis tellement fier de toi. Christophe ❤️',pig:'Bravo ma beauté ! Séance validée en mode cochon, comme une championne. On y va ensemble. Christophe ❤️',camel:'Séance douce validée, Pumba. Même en chameau tu avances, et ça me rend fier. Christophe ❤️',mammoth:'Mode mammouth respecté : je ne dis rien… juste que je pense à toi. Christophe ❤️'};m.sun=m.pig;m.cloud=m.camel;m.rain=m.mammoth;
+    const m={chick:'Mon poussin ! Séance et bonus validés, tu es incroyable. Tu peux être super fière de toi. Christophe ❤️',pig:'Bravo ma beauté ! Séance validée en mode cochon, comme une championne. On y va ensemble. Christophe ❤️',camel:'Séance douce validée, Pumba. Même en chameau tu avances, sois fière de toi. Christophe ❤️',mammoth:'Mode mammouth respecté : je ne dis rien… juste que je pense à toi. Christophe ❤️'};m.sun=m.pig;m.cloud=m.camel;m.rain=m.mammoth;
     box.innerHTML='<div class="session done"><div class="big">'+({chick:'🐥',pig:'🐷',camel:'🐪',mammoth:'🦣',sun:'🐷',cloud:'🐪',rain:'🦣'}[done.w])+'</div><h2>C’est fait pour aujourd’hui</h2><p class="sub" style="margin-top:8px">'+m[done.w]+'</p></div>';
     return;
   }
