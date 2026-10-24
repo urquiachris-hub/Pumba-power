@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pumba Power</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F4FA; --surface:#FFFFFF; --ink:#2E2340; --muted:#6E6480;
+  --plum:#4A3260; --sun:#F2C14E; --sage:#7FAE95; --rose:#E59AA4; --sky:#9AB3D6;
+  --line:#E4DEEE; --soft:#EEE8F6;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1B1623; --surface:#261F31; --ink:#F1ECF7; --muted:#B3A8C4;
+    --plum:#C9B2E6; --line:#3A3048; --soft:#30283D;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1B1623; --surface:#261F31; --ink:#F1ECF7; --muted:#B3A8C4;
+  --plum:#C9B2E6; --line:#3A3048; --soft:#30283D; color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;line-height:1.1;margin:0}
+main{max-width:560px;margin:0 auto;padding:20px 18px 120px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:18px}
+.top h1{font-size:2rem;font-weight:800;color:var(--plum);letter-spacing:-.02em}
+.top p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+.level{text-align:right;flex-shrink:0}
+.level .emo{font-size:2rem;display:block;line-height:1}
+.level small{color:var(--muted);font-size:.8rem}
+
+.xp{background:var(--soft);border-radius:99px;height:10px;overflow:hidden;margin:4px 0 6px}
+.xp span{display:block;height:100%;background:linear-gradient(90deg,var(--sage),var(--sun));border-radius:99px;transition:width .6s ease}
+.xpmeta{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:22px}
+
+.tab{display:none}.tab.on{display:block}
+
+/* Mot doux */
+.love{background:color-mix(in srgb,var(--rose) 14%,var(--surface));border:1.5px dashed var(--rose);border-radius:20px;padding:16px 18px 12px;margin-bottom:22px}
+.love p{margin:0;font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;font-size:1.12rem;font-weight:500;line-height:1.35}
+.love .sign{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:.85rem;color:var(--muted)}
+.love button{background:none;border:0;padding:0;color:var(--plum);text-decoration:underline;font-size:.85rem}
+
+/* Weather — the signature element */
+.ask{font-size:1.45rem;font-weight:700;margin-bottom:12px}
+.weather{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:22px}
+.wbtn{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:16px 6px 12px;text-align:center;transition:transform .15s,border-color .15s}
+.wbtn .ico{font-size:2.4rem;display:block;line-height:1.1}
+.wbtn b{display:block;font-size:.95rem;margin-top:6px}
+.wbtn small{display:block;color:var(--muted);font-size:.74rem;line-height:1.3;margin-top:2px}
+.wbtn[aria-pressed="true"]{transform:translateY(-3px)}
+.wbtn.chick[aria-pressed="true"]{border-color:var(--sun);background:color-mix(in srgb,var(--sun) 18%,var(--surface))}
+.wbtn.pig[aria-pressed="true"]{border-color:var(--rose);background:color-mix(in srgb,var(--rose) 18%,var(--surface))}
+.wbtn.camel[aria-pressed="true"]{border-color:var(--sky);background:color-mix(in srgb,var(--sky) 20%,var(--surface))}
+.wbtn.mammoth[aria-pressed="true"]{border-color:var(--muted);background:color-mix(in srgb,var(--muted) 16%,var(--surface))}
+
+.session{background:var(--surface);border-radius:20px;padding:18px;border:1px solid var(--line)}
+.session h2{font-size:1.25rem;margin-bottom:4px}
+.session .sub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+.ex{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line)}
+.ex input{width:22px;height:22px;margin-top:2px;accent-color:var(--sage);flex-shrink:0}
+.ex label{flex:1;cursor:pointer}
+.ex b{display:block;font-weight:600}
+.ex span{color:var(--muted);font-size:.86rem}
+.ex .dose{font-weight:600;color:var(--plum);white-space:nowrap;font-size:.88rem;text-align:right}
+.see{background:var(--soft);border:0;border-radius:10px;font-size:.78rem;padding:4px 9px;margin-top:6px;color:var(--plum);font-weight:600}
+
+/* Exercices */
+.intro{color:var(--muted);font-size:.92rem;margin:-4px 0 16px}
+details.exo{background:var(--surface);border:1px solid var(--line);border-radius:18px;margin-bottom:10px;overflow:hidden}
+details.exo summary{padding:14px 16px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.exo summary::-webkit-details-marker{display:none}
+details.exo summary::after{content:"+";color:var(--muted);font-size:1.3rem;line-height:1}
+details.exo[open] summary::after{content:"−"}
+.exo .body{padding:0 16px 16px;font-size:.92rem}
+.exo .body p{margin:8px 0}
+.exo .body b{color:var(--plum)}
+.fig{display:block;width:100%;height:auto;background:var(--soft);border-radius:14px}
+.fig polyline,.fig path,.fig line{fill:none;stroke:var(--plum);stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+.fig .acc{stroke:var(--rose)}
+.fig .ghost{opacity:.22}
+.fig .floor{stroke:var(--line);stroke-width:3}
+.fig circle{fill:var(--plum)}
+.fig .arr line,.fig .arr polyline{stroke:var(--sun);stroke-width:4}
+.fig text{fill:var(--muted);font:500 10px Figtree,system-ui,sans-serif}
+.vid{display:inline-block;margin-top:4px;color:var(--plum);font-weight:600}
+.cta{display:block;width:100%;margin-top:16px;border:0;border-radius:16px;padding:15px;background:var(--plum);color:var(--bg);font-weight:600;font-size:1rem}
+.cta:disabled{opacity:.45;cursor:default}
+.done{text-align:center;padding:26px 10px}
+.done .big{font-size:3rem}
+.hint{background:var(--soft);border-radius:16px;padding:14px 16px;font-size:.9rem;margin-top:16px}
+
+/* Programme */
+.phase{border-left:5px solid var(--sage);background:var(--surface);border-radius:4px 18px 18px 4px;padding:16px 16px 10px;margin-bottom:14px}
+.phase.p2{border-color:var(--sun)}.phase.p3{border-color:var(--rose)}
+.phase.locked{opacity:.55}
+.phase h3{font-size:1.15rem}
+.phase .when{color:var(--muted);font-size:.85rem;margin:2px 0 8px}
+.phase ul{margin:0;padding-left:18px;font-size:.92rem}
+.phase li{margin:3px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+.card h3{font-size:1.1rem;margin-bottom:8px}
+.card p,.card ul{font-size:.92rem;margin:6px 0}
+.card ul{padding-left:18px}
+.warn{border-color:var(--rose);background:color-mix(in srgb,var(--rose) 10%,var(--surface))}
+
+/* Assiette */
+.plate{display:block;margin:4px auto 12px;max-width:220px;width:100%}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.88rem}
+.legend div{display:flex;gap:8px;align-items:center}
+.dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.defi{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.defi input{width:22px;height:22px;accent-color:var(--sun);flex-shrink:0}
+.defi label{flex:1;font-size:.93rem;cursor:pointer}
+.defi small{display:block;color:var(--muted)}
+
+/* Badges */
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.badge{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 6px;text-align:center}
+.badge .e{font-size:2rem;display:block;filter:grayscale(1);opacity:.35}
+.badge.got .e{filter:none;opacity:1}
+.badge b{display:block;font-size:.8rem;margin-top:6px;line-height:1.25}
+.badge small{color:var(--muted);font-size:.72rem}
+.hist{font-size:.88rem;color:var(--muted)}
+.reset{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.85rem;margin-top:16px;padding:0}
+
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));z-index:5}
+nav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;font-size:.72rem;color:var(--muted);padding:4px 6px;border-radius:12px}
+nav button span{font-size:1.35rem;line-height:1.2}
+nav button[aria-current="page"]{color:var(--plum);background:var(--soft);font-weight:600}
+
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--plum);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div>
+      <h1>Pumba Power 🐷</h1>
+      <p>8 semaines pour un ventre fort, et je suis avec toi à chaque séance.</p>
+    </div>
+    <div class="level"><span class="emo" id="lvlEmo">🌱</span><small id="lvlName">Graine</small></div>
+  </header>
+  <div class="xp" role="progressbar" aria-label="Progression"><span id="xpBar" style="width:0%"></span></div>
+  <div class="xpmeta"><span id="xpTxt">0 XP</span><span id="phaseTxt">Phase 1</span></div>
+
+  <!-- AUJOURD'HUI -->
+  <section class="tab on" id="t-today">
+    <div class="love" aria-live="polite">
+      <p id="loveTxt"></p>
+      <div class="sign"><button id="loveMore">Un autre mot doux</button><span>Christophe ❤️</span></div>
+    </div>
+    <h2 class="ask">T’es en mode quel animal aujourd’hui ?</h2>
+    <div class="weather" role="group" aria-label="Ton animal du jour">
+      <button class="wbtn chick" data-w="chick" aria-pressed="false"><span class="ico">🐥</span><b>Poussin</b><small>Ça va hyper bien</small></button>
+      <button class="wbtn pig" data-w="pig" aria-pressed="false"><span class="ico">🐷</span><b>Cochon</b><small>Moyen, mon quotidien</small></button>
+      <button class="wbtn camel" data-w="camel" aria-pressed="false"><span class="ico">🐪</span><b>Chameau</b><small>Ça va pas</small></button>
+      <button class="wbtn mammoth" data-w="mammoth" aria-pressed="false"><span class="ico">🦣</span><b>Mammouth</b><small>Faut pas me parler</small></button>
+    </div>
+    <div id="sessionBox"></div>
+  </section>
+
+  <!-- PROGRAMME -->
+  <section class="tab" id="t-prog">
+    <div class="card">
+      <h3>Ton code animal</h3>
+      <ul>
+        <li>🐷 <b>Cochon</b> : ta séance normale. C’est ton quotidien et tu en es capable, le programme est construit autour.</li>
+        <li>🐥 <b>Poussin</b> : séance normale + un bonus pour profiter de la forme.</li>
+        <li>🐪 <b>Chameau</b> : séance douce, sans forcer.</li>
+        <li>🦣 <b>Mammouth</b> : on ne te demande rien, juste 5 à 10 minutes de soin pour toi.</li>
+      </ul>
+      <p>Chaque animal fait avancer la mission, même le mammouth.</p>
+    </div>
+    <div class="phase" id="ph1">
+      <h3>🌱 Phase 1, le réveil</h3>
+      <p class="when">Semaines 1 et 2, 3 séances de 15 à 20 min</p>
+      <ul><li>Respirer avec le ventre, réveiller les abdos profonds</li><li>Exercices allongée, faible pression sur le bassin</li><li>Marche 20 min les autres jours</li></ul>
+    </div>
+    <div class="phase p2" id="ph2">
+      <h3>🌿 Phase 2, la construction</h3>
+      <p class="when">Semaines 3 à 5, 3 à 4 séances de 25 min</p>
+      <ul><li>Gainage qui progresse, premiers exercices debout</li><li>Fessiers et dos pour une belle posture</li><li>Marche rapide, vélo ou natation 25 min</li></ul>
+    </div>
+    <div class="phase p3" id="ph3">
+      <h3>🌸 Phase 3, l’affinage</h3>
+      <p class="when">Semaines 6 à 8, 4 séances de 30 min</p>
+      <ul><li>Gainage complet, enchaînements plus dynamiques</li><li>Cardio doux 30 min pour affiner la silhouette</li><li>On garde ce rythme comme nouvelle routine</li></ul>
+    </div>
+    <div class="card">
+      <h3>Bon à savoir sur le ventre</h3>
+      <p>On ne peut pas « brûler » la graisse uniquement sur le ventre. Ce qui l’affine : le gainage profond (il resserre la sangle comme une ceinture), l’activité régulière et l’assiette.</p>
+      <p>Avec l’endométriose, le ventre peut gonfler fortement certains jours. Ce n’est pas de la graisse et ça ne reflète pas tes progrès. Juge plutôt sur tes sensations : posture, souffle, énergie, vêtements.</p>
+    </div>
+  </section>
+
+  <!-- EXERCICES -->
+  <section class="tab" id="t-exos">
+    <h2 class="ask">Les bons gestes</h2>
+    <p class="intro">Touche un exercice pour voir le dessin et les repères. En rose, la partie qui bouge ; en transparent, la position de départ.</p>
+    <div id="exList"></div>
+  </section>
+
+  <!-- ASSIETTE -->
+  <section class="tab" id="t-food">
+    <div class="card">
+      <h3>L’assiette qui aide le ventre</h3>
+      <svg class="plate" viewBox="0 0 200 200" role="img" aria-label="Assiette : moitié légumes, un quart protéines, un quart féculents complets">
+        <circle cx="100" cy="100" r="96" fill="var(--soft)"/>
+        <path d="M100 100 L100 12 A88 88 0 0 1 100 188 Z" fill="var(--sage)"/>
+        <path d="M100 100 L100 188 A88 88 0 0 1 12 100 Z" fill="var(--rose)"/>
+        <path d="M100 100 L12 100 A88 88 0 0 1 100 12 Z" fill="var(--sun)"/>
+        <text x="146" y="104" text-anchor="middle" font-size="26">🥦</text>
+        <text x="62" y="148" text-anchor="middle" font-size="22">🐟</text>
+        <text x="62" y="68" text-anchor="middle" font-size="22">🍚</text>
+      </svg>
+      <div class="legend">
+        <div><i class="dot" style="background:var(--sage)"></i>½ légumes</div>
+        <div><i class="dot" style="background:var(--rose)"></i>¼ protéines</div>
+        <div><i class="dot" style="background:var(--sun)"></i>¼ féculents complets</div>
+        <div>🫒 + un filet de bonne huile</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Les alliés anti-inflammatoires</h3>
+      <ul>
+        <li>Poissons gras (saumon, sardine, maquereau), noix, graines de lin et de chia, huile de colza ou d’olive</li>
+        <li>Légumes et fruits colorés, légumineuses</li>
+        <li>Épices : curcuma, gingembre, cannelle</li>
+      </ul>
+      <p>À limiter : produits ultra-transformés, sucres rapides en excès, alcool, beaucoup de viande rouge ou de charcuterie. Beaucoup de femmes atteintes d’endométriose s’y sentent mieux.</p>
+      <p>Ventre qui gonfle ? Note les aliments qui semblent le déclencher et parles-en à une diététicienne avant d’en supprimer.</p>
+    </div>
+    <div class="card">
+      <h3>Un défi par semaine</h3>
+      <p style="color:var(--muted)">Coche quand le défi est devenu une habitude. Chaque défi rapporte 25 XP.</p>
+      <div id="defis"></div>
+    </div>
+  </section>
+
+  <!-- TROPHÉES -->
+  <section class="tab" id="t-badges">
+    <h2 class="ask">Tes trophées</h2>
+    <div class="badges" id="badges"></div>
+    <div class="card" style="margin-top:16px">
+      <h3>Ton historique</h3>
+      <div class="hist" id="hist">Aucune séance pour l’instant. Ta première t’attend dans l’onglet Aujourd’hui.</div>
+    </div>
+    <button class="reset" id="reset">Recommencer la mission à zéro</button>
+  </section>
+</main>
+
+<nav aria-label="Navigation">
+  <button data-t="today" aria-current="page"><span>🐷</span>Aujourd’hui</button>
+  <button data-t="prog"><span>🗺️</span>Programme</button>
+  <button data-t="exos"><span>🎬</span>Exercices</button>
+  <button data-t="food"><span>🥗</span>Assiette</button>
+  <button data-t="badges"><span>🏆</span>Trophées</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const KEY='mission-laura-v1';
+const LOVE=[
+  'Bonjour ma beauté ☀️ Chaque séance est un pas de plus, et je suis déjà fier de toi.',
+  'Pumba, on va y arriver ensemble. Toi et moi, une séance après l’autre.',
+  'Tu es belle. Aujourd’hui, demain, et tous les jours entre les deux.',
+  'Ma beauté, n’oublie pas que je te trouve déjà magnifique exactement comme tu es.',
+  'Une planche de plus = un câlin de plus. Je tiens les comptes 😘',
+  'Hakuna Matata, Pumba ! Pas de pression, juste toi et ton souffle.',
+  'Si tu es en mammouth aujourd’hui, je ne dis rien… mais je suis fier de toi quand même 🦣',
+  'En mode cochon ? Parfait, c’est ton super-pouvoir du quotidien, ma beauté 🐷',
+  'Pense à moi pendant ton gainage… et souris, ça aide à tenir 😉',
+  'Tu es plus forte que tu ne le crois, ma beauté.',
+  'On avance ensemble, Pumba. Je suis ton premier supporter.',
+  'Tu es belle, et tu ne le sais pas assez. Alors je te le redis.',
+  'Chaque petit effort compte, et chacun me rend encore plus fier de toi.',
+  'Ce soir, raconte-moi ta séance. Je veux tout savoir, ma beauté.',
+  'Douceur plaisir autorisée aujourd’hui : c’est moi qui l’ai décidé 🍫',
+  'Pumba, tu n’es pas seule dans cette mission. On y va ensemble, main dans la main.'
+];
+let S={log:[],defis:Array(8).fill(false)};
+try{const r=localStorage.getItem(KEY);if(r){const p=JSON.parse(r);if(p&&Array.isArray(p.log))S={log:p.log,defis:Array.isArray(p.defis)?p.defis:Array(8).fill(false)};}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+const XPW={chick:40,pig:30,camel:20,mammoth:10,sun:30,cloud:20,rain:10};
+const LEVELS=[[0,'🌱','Graine'],[100,'🌿','Pousse'],[250,'🪴','Tige solide'],[450,'🌷','Fleur'],[700,'🌳','Arbre'],[1000,'👑','Reine du gainage']];
+const SESSIONS={
+  1:[
+    ['Respiration ventrale','Allongée, genoux pliés, le ventre se gonfle à l’inspiration','2 min'],
+    ['Activation du transverse','Expire et rentre doucement le nombril, tiens 5 s','10 fois'],
+    ['Pont fessier','Monte le bassin en serrant les fessiers','10 fois'],
+    ['Dead bug facile','Sur le dos, tends un bras puis l’autre, dos collé au sol','8 par côté'],
+    ['Planche sur les genoux','Corps aligné, ventre rentré, souffle régulier','15 s'],
+    ['Chat-vache','À quatre pattes, enroule puis creuse le dos','1 min'],
+  ],
+  2:[
+    ['Respiration + transverse','Pour bien démarrer','1 min'],
+    ['Dead bug complet','Bras et jambe opposés, lentement','10 par côté'],
+    ['Bird dog','À quatre pattes, bras et jambe opposés tendus','10 par côté'],
+    ['Planche','Sur les genoux puis sur les pieds dès que possible','25 s'],
+    ['Gainage latéral','Sur l’avant-bras et les genoux','20 s par côté'],
+    ['Pont fessier une jambe','Bassin bien horizontal','8 par côté'],
+    ['Squats','Fesses en arrière, dos droit','12 fois'],
+  ],
+  3:[
+    ['Planche','Sur les pieds, ventre rentré','40 s'],
+    ['Planche latérale','Sur l’avant-bras et les pieds','25 s par côté'],
+    ['Dead bug lent','Trois secondes pour descendre','12 par côté'],
+    ['Bird dog gainé','Ramène coude et genou sous le ventre entre deux','12 par côté'],
+    ['Squats + fentes','Alterne une série de chaque','12 + 8 par côté'],
+    ['Mountain climbers lents','En planche, genou vers la poitrine, sans à-coups','20 s'],
+    ['Pont fessier','Tiens 2 s en haut','15 fois'],
+  ]
+};
+const ROUNDS={1:'2 tours',2:'3 tours',3:'3 tours'};
+const BONUS={
+  1:[['Bonus poussin : planche sur les genoux','Essaie de battre ton temps habituel','max'],['Bonus poussin : marche rapide','En plus de ta séance','+10 min']],
+  2:[['Bonus poussin : planche touches d’épaules','En planche, touche une épaule puis l’autre sans bouger le bassin','20 s'],['Bonus poussin : cardio','Rallonge ta marche, ton vélo ou ta nage','+10 min']],
+  3:[['Bonus poussin : record de planche','Tiens le plus longtemps possible et note ton record','max'],['Bonus poussin : cardio','Rallonge ton cardio','+10 min']]
+};
+const CARDIO={1:'Puis 20 min de marche, aujourd’hui ou demain',2:'Puis 25 min de marche rapide, vélo ou natation',3:'Puis 30 min de cardio doux : marche rapide, vélo, natation'};
+const SOFT=[
+  ['Respiration ventrale','Allongée, une main sur le ventre','3 min'],
+  ['Chat-vache','Tout en douceur','1 min'],
+  ['Pont fessier','Petite amplitude','8 fois'],
+  ['Dead bug bras seuls','Le dos reste collé au sol','8 par côté'],
+  ['Marche tranquille','Au rythme où tu peux parler','15 min'],
+];
+const REST=[
+  ['Bouillotte et respiration','Allongée, bouillotte sur le ventre, expirations longues','5 min'],
+  ['Posture de l’enfant','Genoux écartés, front au sol ou sur un coussin','1 à 2 min'],
+  ['Papillon allongé','Plantes de pieds jointes, genoux qui s’ouvrent, coussins dessous','2 min'],
+  ['Torsion douce','Allongée, genoux qui basculent d’un côté puis de l’autre','1 min par côté'],
+  ['Petite marche','Seulement si tu en as envie','10 min'],
+];
+const DEFIS=[
+  ['Des légumes à chaque repas','Même une petite portion compte'],
+  ['La gourde toujours à portée de main','Eau, infusions, eau pétillante'],
+  ['Poisson gras 2 fois dans la semaine','Saumon, sardines, maquereau'],
+  ['Un petit-déj avec des protéines','Œufs, yaourt grec, fromage blanc'],
+  ['Manger assise, lentement, sans écran','Le ventre gonfle moins'],
+  ['Remplacer sodas et jus','Par de l’eau aromatisée maison'],
+  ['Passer aux féculents complets','Riz complet, quinoa, pain complet'],
+  ['Une douceur plaisir par jour, savourée','Sans culpabilité, c’est permis !'],
+];
+const BADGES=[
+  ['👟','Premier pas','1 séance',s=>s.log.length>=1],
+  ['🔥','Lancée','5 séances',s=>s.log.length>=5],
+  ['🐥','Jour de poussin','1 séance poussin',s=>s.log.some(l=>l.w==='chick')],
+  ['🌿','Phase 2','débloquée',s=>phase(s)>=2],
+  ['🌸','Phase 3','débloquée',s=>phase(s)>=3],
+  ['🏅','Mission accomplie','28 séances',s=>s.log.length>=28],
+  ['🐷','Cochon vaillant','10 séances cochon',s=>s.log.filter(l=>l.w==='pig'||l.w==='sun').length>=10],
+  ['🦣','Mammouth respecté','1 jour mammouth validé',s=>s.log.some(l=>l.w==='mammoth'||l.w==='rain')],
+  ['🥗','Assiette pro','4 défis relevés',s=>s.defis.filter(Boolean).length>=4],
+];
+
+function xp(s){return s.log.reduce((a,l)=>a+(XPW[l.w]||0),0)+s.defis.filter(Boolean).length*25}
+function phase(s){const n=s.log.length;return n>=19?3:n>=7?2:1}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function esc(t){return t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+
+let weather=null;
+function renderHeader(){
+  const x=xp(S);let i=0;LEVELS.forEach((l,k)=>{if(x>=l[0])i=k});
+  const cur=LEVELS[i],nxt=LEVELS[i+1];
+  document.getElementById('lvlEmo').textContent=cur[1];
+  document.getElementById('lvlName').textContent=cur[2];
+  const pct=nxt?((x-cur[0])/(nxt[0]-cur[0]))*100:100;
+  document.getElementById('xpBar').style.width=pct+'%';
+  document.getElementById('xpTxt').textContent=x+' XP'+(nxt?' sur '+nxt[0]:'');
+  const p=phase(S);
+  document.getElementById('phaseTxt').textContent=['','Phase 1, le réveil','Phase 2, la construction','Phase 3, l’affinage'][p]+' · '+S.log.length+' séance'+(S.log.length>1?'s':'');
+  ['ph1','ph2','ph3'].forEach((id,k)=>document.getElementById(id).classList.toggle('locked',k+1>p));
+}
+function renderSession(){
+  const box=document.getElementById('sessionBox');
+  const done=S.log.find(l=>l.d===today());
+  if(done){
+    const m={chick:'Mon poussin ! Séance et bonus validés, tu es incroyable. Je suis tellement fier de toi. Christophe ❤️',pig:'Bravo ma beauté ! Séance validée en mode cochon, comme une championne. On y va ensemble. Christophe ❤️',camel:'Séance douce validée, Pumba. Même en chameau tu avances, et ça me rend fier. Christophe ❤️',mammoth:'Mode mammouth respecté : je ne dis rien… juste que je pense à toi. Christophe ❤️'};m.sun=m.pig;m.cloud=m.camel;m.rain=m.mammoth;
+    box.innerHTML='<div class="session done"><div class="big">'+({chick:'🐥',pig:'🐷',camel:'🐪',mammoth:'🦣',sun:'🐷',cloud:'🐪',rain:'🦣'}[done.w])+'</div><h2>C’est fait pour aujourd’hui</h2><p class="sub" style="margin-top:8px">'+m[done.w]+'</p></div>';
+    return;
+  }
+  if(!weather){box.innerHTML='<div class="hint">Choisis ton animal : la séance s’adapte à ta forme du jour. Même un jour mammouth compte dans ta mission.</div>';return}
+  const p=phase(S);let list,title,sub,extra='';
+  if(weather==='chick'){list=SESSIONS[p].concat(BONUS[p]);title='Séance poussin';sub=ROUNDS[p]+', 30 s de repos, puis les bonus';extra=CARDIO[p]+'. Profite de cette belle journée !';}
+  else if(weather==='pig'){list=SESSIONS[p];title='Séance cochon';sub=ROUNDS[p]+', 30 s de repos entre les exercices';extra=CARDIO[p];}
+  else if(weather==='camel'){list=SOFT;title='Séance chameau';sub='1 tour, tout en douceur';extra='Si la douleur monte, passe en mode mammouth.';}
+  else{list=REST;title='Pause mammouth';sub='On ne te parle pas. Juste 5 à 10 minutes pour toi';extra='Chaleur, silence, et une tisane gingembre si tu aimes.';}
+  let h='<div class="session"><h2>'+title+'</h2><p class="sub">'+sub+'</p>';
+  list.forEach((e,i)=>{h+='<div class="ex"><input type="checkbox" id="e'+i+'"><label for="e'+i+'"><b>'+esc(e[0])+'</b><span>'+esc(e[1])+'</span></label><span class="dose">'+esc(e[2])+(guideFor(e[0])?'<br><button class="see" data-g="'+guideFor(e[0])+'">Voir</button>':'')+'</span></div>'});
+  h+='<div class="hint">'+extra+'</div><button class="cta" id="validate" disabled>Valider ma séance (+'+XPW[weather]+' XP)</button></div>';
+  box.innerHTML=h;
+  box.querySelectorAll('.see').forEach(b=>b.addEventListener('click',()=>openGuide(b.dataset.g)));
+  const boxes=[...box.querySelectorAll('.ex input')],btn=document.getElementById('validate');
+  boxes.forEach(b=>b.addEventListener('change',()=>{btn.disabled=!boxes.some(x=>x.checked)}));
+  btn.addEventListener('click',()=>{
+    const before=BADGES.filter(b=>b[3](S)).length;
+    S.log.push({d:today(),w:weather});save();
+    const after=BADGES.filter(b=>b[3](S));
+    toast(after.length>before?'Nouveau trophée : '+after[after.length-1][1]+' '+after[after.length-1][0]:'Bravo ma beauté ! +'+XPW[weather]+' XP');
+    renderAll();
+  });
+}
+function renderDefis(){
+  const el=document.getElementById('defis');el.innerHTML='';
+  DEFIS.forEach((d,i)=>{
+    const row=document.createElement('div');row.className='defi';
+    row.innerHTML='<input type="checkbox" id="d'+i+'"'+(S.defis[i]?' checked':'')+'><label for="d'+i+'">Semaine '+(i+1)+' : '+esc(d[0])+'<small>'+esc(d[1])+'</small></label>';
+    row.querySelector('input').addEventListener('change',ev=>{S.defis[i]=ev.target.checked;save();if(ev.target.checked)toast('Défi relevé, Pumba ! +25 XP');renderHeader();renderBadges();});
+    el.appendChild(row);
+  });
+}
+function renderBadges(){
+  document.getElementById('badges').innerHTML=BADGES.map(b=>'<div class="badge'+(b[3](S)?' got':'')+'"><span class="e">'+b[0]+'</span><b>'+b[1]+'</b><small>'+b[2]+'</small></div>').join('');
+  const h=document.getElementById('hist');
+  if(S.log.length){const ico={chick:'🐥',pig:'🐷',camel:'🐪',mammoth:'🦣',sun:'🐷',cloud:'🐪',rain:'🦣'};h.innerHTML=S.log.slice().reverse().slice(0,20).map(l=>ico[l.w]+' '+l.d.split('-').reverse().join('/')).join('<br>');}
+  else h.textContent='Aucune séance pour l’instant. Ta première t’attend dans l’onglet Aujourd’hui.';
+}
+const P=(pts,c)=>'<polyline class="'+(c||'')+'" points="'+pts+'"/>';
+const Q=(d,c)=>'<path class="'+(c||'')+'" d="'+d+'"/>';
+const H=(x,y)=>'<circle cx="'+x+'" cy="'+y+'" r="10"/>';
+const A=(x1,y1,x2,y2)=>{const a=Math.atan2(y2-y1,x2-x1),k=9,s=.5;const p1=(x2-k*Math.cos(a-s)).toFixed(1)+','+(y2-k*Math.sin(a-s)).toFixed(1),p2=(x2-k*Math.cos(a+s)).toFixed(1)+','+(y2-k*Math.sin(a+s)).toFixed(1);return '<g class="arr"><line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'"/><polyline points="'+p1+' '+x2+','+y2+' '+p2+'"/></g>'};
+const FIG=(inner,top)=>'<svg class="fig" viewBox="0 0 240 120" aria-hidden="true">'+(top?'<text x="12" y="16">vue du dessus</text>':'<line class="floor" x1="10" y1="108" x2="230" y2="108"/>')+inner+'</svg>';
+const LYING=H(32,96)+P('44,99 120,99')+P('120,99 150,70 178,104');
+const GUIDE=[
+ {id:'resp',n:'Respiration ventrale',f:FIG(LYING+P('54,99 75,90 92,90')+Q('M78 96 Q95 80 112 96','acc')+A(95,74,95,56)),pos:'Allongée sur le dos, genoux pliés, une main sur le ventre.',mv:'Inspire par le nez : le ventre se gonfle sous ta main. Expire longuement par la bouche : il redescend.',err:'Gonfler la poitrine ou lever les épaules.',tip:'La main sur le ventre monte, celle sur la poitrine bouge à peine.',q:'respiration abdominale allongée débutant'},
+ {id:'transverse',n:'Activation du transverse',f:FIG(LYING+Q('M78 96 Q95 92 112 96','acc')+A(95,60,95,82)),pos:'Allongée sur le dos, genoux pliés, pieds à plat.',mv:'Expire en rentrant doucement le nombril vers la colonne, comme pour fermer un jean serré. Tiens 5 s en respirant calmement.',err:'Bloquer sa respiration, creuser le dos ou serrer les fesses.',tip:'Pose tes doigts juste à l’intérieur des os du bassin : tu dois sentir le muscle se tendre doucement.',q:'activation muscle transverse allongé'},
+ {id:'pont',n:'Pont fessier',f:FIG(H(30,95)+P('42,99 115,99','ghost')+P('42,99 112,72','acc')+P('112,72 150,64 165,104')+P('44,102 95,104')+A(112,58,112,40)),pos:'Sur le dos, genoux pliés, pieds à plat largeur de bassin, bras le long du corps.',mv:'Expire et monte le bassin en serrant les fessiers jusqu’à aligner genoux, hanches et épaules. Redescends doucement.',err:'Cambrer le bas du dos ou pousser avec la nuque.',tip:'En version une jambe, garde le bassin bien horizontal, comme un plateau.',q:'pont fessier exercice débutant'},
+ {id:'deadbug',n:'Dead bug',f:FIG(H(30,96)+P('42,99 115,99')+P('55,99 58,58')+P('55,99 22,72','acc')+P('115,99 118,66 150,64')+P('115,99 178,90','acc')),pos:'Sur le dos, bras tendus vers le plafond, genoux pliés à 90° au-dessus des hanches.',mv:'Expire et descends lentement un bras derrière la tête et la jambe opposée vers le sol, sans les poser. Reviens, puis change de côté.',err:'Le bas du dos qui se décolle du sol.',tip:'Glisse ta main sous le bas du dos : il doit rester appuyé dessus. Version facile, on bouge seulement les bras.',q:'dead bug exercice gainage débutant'},
+ {id:'planche',n:'Planche',f:FIG(H(46,72)+P('60,104 86,104')+P('60,104 60,80')+P('60,80 195,102')+P('60,80 128,92 128,104','ghost')),pos:'Sur les avant-bras, coudes sous les épaules, sur les genoux (en transparent) ou sur la pointe des pieds.',mv:'Rentre le nombril, serre les fessiers et garde le corps droit comme une planche. Respire normalement.',err:'Les fesses trop hautes, le dos qui s’affaisse ou la tête qui tombe.',tip:'Regarde le sol entre tes mains. Mieux vaut 15 s parfaites que 40 s mal faites.',q:'planche gainage genoux débutante'},
+ {id:'lateral',n:'Gainage latéral',f:FIG(H(46,70)+P('60,104 82,104')+P('60,104 60,78')+P('60,78 195,104')+P('62,78 72,32','acc')),pos:'Sur le côté, avant-bras au sol, coude sous l’épaule, genoux pliés ou jambes tendues.',mv:'Monte les hanches pour aligner tête, hanches et pieds. Tends l’autre bras vers le ciel si tu te sens stable.',err:'Les hanches qui retombent ou partent en arrière.',tip:'Imagine que tu es collée contre un mur dans ton dos.',q:'gainage latéral genoux débutant'},
+ {id:'chat',n:'Chat-vache',f:FIG(H(46,84)+P('60,104 60,72')+Q('M60 72 Q100 40 140 72','acc')+Q('M60 72 Q100 96 140 72','ghost')+P('140,72 140,104 178,104')),pos:'À quatre pattes, mains sous les épaules, genoux sous les hanches.',mv:'Expire en enroulant le dos vers le plafond (le chat), inspire en le creusant doucement (la vache).',err:'Aller trop vite ou forcer l’amplitude.',tip:'Bouge vertèbre par vertèbre, au rythme de ta respiration.',q:'chat vache yoga exercice'},
+ {id:'birddog',n:'Bird dog',f:FIG(H(58,56)+P('70,104 70,72')+P('70,72 140,72')+P('140,72 140,104 172,104')+P('70,72 22,66','acc')+P('140,72 202,64','acc')),pos:'À quatre pattes, dos plat, nombril rentré.',mv:'Tends lentement un bras devant et la jambe opposée derrière, tiens 2 s, reviens. Change de côté.',err:'Le bassin qui bascule sur le côté ou le dos qui se creuse.',tip:'Imagine un verre d’eau posé sur le bas de ton dos : il ne doit pas tomber.',q:'bird dog exercice gainage'},
+ {id:'squat',n:'Squat',f:FIG(P('120,104 120,64 120,30','ghost')+P('108,104 132,104')+P('118,104 140,80 100,68','acc')+P('100,68 122,34')+P('120,40 165,48')+H(128,22)),pos:'Debout, pieds écartés largeur d’épaules, pointes légèrement ouvertes.',mv:'Envoie les fesses en arrière comme pour t’asseoir, descends jusqu’où tu es à l’aise, puis remonte en poussant dans les talons.',err:'Les genoux qui rentrent vers l’intérieur ou les talons qui décollent.',tip:'Entraîne-toi devant une chaise : effleure-la avec les fesses et remonte.',q:'squat poids du corps débutant'},
+ {id:'fente',n:'Fente',f:FIG(P('115,62 152,64 152,104','acc')+P('115,62 96,100 66,98')+P('115,62 115,26')+P('115,32 132,46 120,60')+H(115,14)),pos:'Debout, un grand pas en avant.',mv:'Descends le genou arrière vers le sol, buste droit, puis remonte. En bas, les deux genoux forment un angle droit.',err:'Le genou avant qui dépasse largement la pointe du pied, ou le buste qui penche.',tip:'Tiens-toi à un mur ou une chaise au début pour l’équilibre.',q:'fente avant exercice débutant'},
+ {id:'mountain',n:'Mountain climber lent',f:FIG(H(46,56)+P('60,104 60,62')+P('60,62 195,100')+P('128,81 104,90 112,104','acc')),pos:'En planche sur les mains, bras tendus, corps aligné.',mv:'Ramène lentement un genou vers la poitrine, repose, puis l’autre. Sans à-coups.',err:'Les fesses qui montent ou le bassin qui se balance.',tip:'Ici on va lentement : c’est le gainage qui compte, pas la vitesse.',q:'mountain climber lent gainage'},
+ {id:'touches',n:'Planche touches d’épaules',f:FIG(H(46,56)+P('60,104 60,62')+P('60,62 195,100')+P('62,63 88,82 70,68','acc')),pos:'En planche sur les mains, pieds un peu écartés pour la stabilité.',mv:'Touche une épaule avec la main opposée, repose, puis l’autre.',err:'Le bassin qui se balance de gauche à droite.',tip:'Écarte davantage les pieds si c’est trop dur, ou fais-le sur les genoux.',q:'planche touches épaules débutant'},
+ {id:'enfant',n:'Posture de l’enfant',f:FIG(P('128,104 178,104')+P('128,104 150,90')+Q('M150 90 Q110 56 74 92','acc')+P('84,92 28,104')+H(66,97)),pos:'À genoux, gros orteils qui se touchent, genoux écartés.',mv:'Assieds-toi sur les talons et allonge le buste vers l’avant, bras tendus, front au sol ou sur un coussin. Respire dans le dos.',err:'Forcer si les genoux tirent.',tip:'Un coussin sous le ventre ou les fesses rend la posture plus douce les jours difficiles.',q:'posture de l enfant yoga'},
+ {id:'papillon',n:'Papillon allongé',f:FIG(H(38,60)+P('50,60 125,60')+P('62,60 82,32')+P('62,60 82,88')+P('125,60 155,24 182,60','acc')+P('125,60 155,96 182,60','acc'),true),pos:'Allongée sur le dos, plantes de pieds jointes.',mv:'Laisse les genoux s’ouvrir sur les côtés, sans forcer, et respire calmement dans le ventre.',err:'Pousser sur les genoux pour aller plus loin.',tip:'Des coussins sous chaque genou permettent de se relâcher complètement.',q:'papillon allongé yoga'},
+ {id:'torsion',n:'Torsion douce',f:FIG(H(38,60)+P('50,60 125,60')+P('62,60 62,18')+P('62,60 62,102')+P('125,60 155,60 182,60','ghost')+P('125,60 150,92 182,84','acc')+A(168,66,168,84),true),pos:'Allongée sur le dos, bras en croix, genoux pliés.',mv:'Laisse doucement tomber les deux genoux d’un côté, tête tournée de l’autre. Respire, puis change de côté.',err:'Décoller les épaules du sol.',tip:'Glisse un coussin sous les genoux si la torsion tire trop.',q:'torsion allongée douce yoga'}
+];
+const RULES=[['touches','touches'],['latéral','lateral'],['espiration','resp'],['transverse','transverse'],['Pont','pont'],['Dead bug','deadbug'],['lanche','planche'],['Chat','chat'],['Bird dog','birddog'],['Squat','squat'],['Mountain','mountain'],['enfant','enfant'],['Papillon','papillon'],['Torsion','torsion']];
+function guideFor(name){const r=RULES.find(r=>name.indexOf(r[0])>-1);return r?r[1]:''}
+function renderGuide(){document.getElementById('exList').innerHTML=GUIDE.map(g=>'<details class="exo" id="g-'+g.id+'"><summary>'+g.n+'</summary><div class="body">'+g.f+'<p><b>Position :</b> '+g.pos+'</p><p><b>Le mouvement :</b> '+g.mv+'</p><p><b>À éviter :</b> '+g.err+'</p><p><b>Pour te corriger :</b> '+g.tip+'</p><a class="vid" href="https://www.youtube.com/results?search_query='+encodeURIComponent(g.q)+'" target="_blank" rel="noopener">▶ Voir des vidéos de démonstration</a></div></details>').join('')}
+function openGuide(id){document.querySelector('nav button[data-t="exos"]').click();const d=document.getElementById('g-'+id);if(d){d.open=true;setTimeout(()=>d.scrollIntoView({block:'start',behavior:'smooth'}),50)}}
+renderGuide();
+function renderAll(){renderHeader();renderSession();renderDefis();renderBadges();}
+let loveI=Math.floor(Date.now()/86400000)%LOVE.length;
+function renderLove(){document.getElementById('loveTxt').textContent=LOVE[loveI]}
+document.getElementById('loveMore').addEventListener('click',()=>{loveI=(loveI+1)%LOVE.length;renderLove()});
+renderLove();
+
+document.querySelectorAll('.wbtn').forEach(b=>b.addEventListener('click',()=>{
+  weather=b.dataset.w;document.querySelectorAll('.wbtn').forEach(x=>x.setAttribute('aria-pressed',x===b));renderSession();
+}));
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.removeAttribute('aria-current'));b.setAttribute('aria-current','page');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.id==='t-'+b.dataset.t));window.scrollTo(0,0);
+}));
+document.getElementById('reset').addEventListener('click',()=>{if(confirm('Effacer toute la progression ?')){S={log:[],defis:Array(8).fill(false)};save();renderAll();}});
+let tt;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2400)}
+renderAll();
+</script>
+</body>
+</html>
